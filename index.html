@@ -18,7 +18,7 @@
         <div class="container d-flex flex-column align-items-center">
             <h1 class="mt-5 mb-3 centered"></h1>
             <img src="thegameteca.png" alt="thegametecalogo" id="logo">
-            <button class="button-89" role="button">CADASTRAR</button>
+            <button class="button-89" role="button" data-bs-toggle="modal" data-bs-target="#cadastrarModal">CADASTRAR</button>
         </div>
         <div class="container">
             <table class="table retro-table mt-5">
@@ -38,7 +38,80 @@
             </table>
         </div>
     </div>
-    
+    <div class="modal fade" id="cadastrarModal" tabindex="-1" aria-labelledby="cadastrarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalTitle">Cadastrar Jogo</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <form action="" id="cadastrarForm">
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" aria-describedby="nomeJogo" placeholder="Nome do jogo" required>
+                </div>
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Ano de Lançamento</label>
+                    <input type="number" class="form-control" id="ano-lancamento" aria-describedby="anoLançamento" placeholder="ex: 2009" required>
+                </div>
+                <div class="mb-3">
+                    <label for="plataformas" class="form-label">Plataformas: </label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="checkbox1" value="PC">
+                        <label class="form-check-label" for="inlineCheckbox1">PC</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="checkbox2" value="Xbox">
+                        <label class="form-check-label" for="inlineCheckbox2">Xbox</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="checkbox3" value="Playstation">
+                        <label class="form-check-label" for="inlineCheckbox2">Playstation</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="checkbox4" value="Nintendo">
+                        <label class="form-check-label" for="inlineCheckbox2">Nintendo</label>
+                      </div>
+
+                </div>
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Categoria</label>
+                    <select class="form-select" aria-label="select categoria" id="categoria">
+                        <option option value="" selected>Selecione a categoria</option>
+                        <option value="Single Player">Single Player</option>
+                        <option value="Multiplayer">Multiplayer</option>                    
+                      </select>
+                </div>
+                <div class="mb-3">
+                    <label for="genero" class="form-label">Genero</label>
+                    <select class="form-select" aria-label="Seleção de genero de jogo" id="genero">
+                        <option value="" selected>Selecione o genero</option>
+                        <option value="RPG">RPG</option>
+                        <option value="MMORPG">MMORPG</option>
+                        <option value="FPS">FPS</option>
+                        <option value="MOBA">MOBA</option>
+                        <option value="Ação">Ação</option>
+                        <option value="Puzzle">Puzzle</option>
+                        <option value="Esportes">Esportes</option>
+                        <option value="Sobrevivência">Sobrevivência</option>
+                        <option value="Simulação">Simulação</option>
+                        <option value="Horror">Horror</option>                        
+                      </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+            </div>
+            <div class="alert alert-danger" role="alert" id="alertError">
+                A simple danger alert—check it out!
+              </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
     
 
     <script src="script.js"></script>

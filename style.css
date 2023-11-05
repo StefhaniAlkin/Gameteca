@@ -64,3 +64,12 @@ body {
     border-radius: 10px;
 }
 
+/* ------------------ MODAL ---------------------- */
+/* Cadastrar Modal*/
+[for="plataformas"] {
+  margin-right: 0.5rem;
+}
+
+#cadastrarModal .modal-content{
+  width: 35rem;
+}
