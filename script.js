@@ -94,7 +94,8 @@ function buildGameTd(game) {
   btnDelete.className = 'btnDelete'
   btnDelete.textContent = '❌'
   btnDelete.addEventListener('click', function () {
-    console.log('Botão Excluir foi clicado.')
+    deleteData(game.id);
+    console.log('Botão Excluir '+ game.id +' foi clicado.')
   })
   tdAction.appendChild(btnDelete)
   tr.appendChild(tdAction)
@@ -143,7 +144,6 @@ function saveData() {
     localStorage.setItem('data', JSON.stringify(request.data))
   } catch (e) {
     response.status = 423
-    response.error = true
     response.message = 'Não foi possível efetuar o cadastro!'
     response.errorStack = e
   }
@@ -162,4 +162,18 @@ function getCheckboxes() {
   }
 
   return arraySelecionados
+}
+
+function deleteData(id) {
+  let request = getData();
+  if (request.status == 200){
+    if (id >= 0 && id < request.data.length) {
+      request.data.splice(id, 1);
+      for (let i = id; i < request.data.length; i++) {
+        request.data[i].id = i;
+      }
+  }
+  }
+  localStorage.setItem('data', JSON.stringify(request.data));
+  
 }
