@@ -64,3 +64,48 @@ function getData(){
   return request;
 }
 
+function saveData(){
+  let response = {};
+  let idGame;
+
+  let request = getData();
+  if(request.data != null){      
+    idGame = request.data.length;
+  } else {
+    idGame = 0;
+  }
+
+  game = {
+    id : idGame,
+    nome: document.getElementById("nome").value,
+    ano: document.getElementById("ano-lancamento").value,
+    plataformas: getCheckboxes(),
+    categoria: document.getElementById("categoria").value,
+    genero: document.getElementById("genero").value
+  }
+  
+  request.data.push(game);
+  try{
+    localStorage.setItem("data", JSON.stringify(request.data));
+  } catch(e){
+    response.status = 423;
+    response.error = true;
+    response.message = "Não foi possível efetuar o cadastro!";
+    response.errorStack = e;
+  }
+
+  response.status = 201;
+  response.message = "Cadastro criado com sucesso!";
+  response.data = idGame;
+  return response;
+}
+
+function getCheckboxes() { 
+var arraySelecionados = [];
+var checkboxes = document.querySelectorAll("input[type='checkbox']:checked");
+for (var i = 0; i < checkboxes.length; i++) {
+  arraySelecionados.push(checkboxes[i].value);
+}
+
+return arraySelecionados;
+}
