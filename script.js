@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const form = document.getElementById('cadastrarForm')
-  const checkboxes = form.querySelectorAll('input[type="checkbox"]')
-  const alert = document.getElementById('alertError')
+  const form = document.getElementById('cadastrarForm');
+  const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+  const alert = document.getElementById('alertError');
+  let request = getData();
 
   alert.style.display = 'none'
 
   form.addEventListener('submit', function (event) {
     validateFields(event)
+    saveData();
   })
-
-
 
   
 
@@ -43,5 +43,24 @@ document.addEventListener('DOMContentLoaded', function () {
       alert.style.display = 'block'
       event.preventDefault()
     }
+    event.preventDefault()
   }
 })
+
+
+function getData(){
+  let request = {"data": localStorage.getItem("data")};
+  if(request.data != null){
+    request.status = 200;
+    request.error = false;
+    console.log(request.data);
+    request.data = JSON.parse(request.data);
+    return request;
+  }
+  request.status = 404;
+  request.error = true;
+  request.message = "Dados não encontrados!"
+  request.data = [];
+  return request;
+}
+
