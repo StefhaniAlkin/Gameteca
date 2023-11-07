@@ -1,14 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("cadastrarForm");
   const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-  const alert = document.getElementById("alertError");
-  const successAlert = document.getElementById("alertSuccess");
-  const alertEdit = document.getElementById("alertErrorEdit");
-  const successAlertEdit = document.getElementById("alertSuccessEdit");
   const buttonRegister = document.getElementById("btnModalCadastro")
   let request = getData();
   buildTable(request.data);
-  hideAlerts();
 
 
   form.addEventListener("submit", function (event) {
@@ -22,11 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     validateEditFields(event);
   });
 
-  buttonRegister.addEventListener("click", (e) => hideAlerts())
-
   function validateFields(event) {
-    successAlert.style.display = "none";
-    alert.style.display = "none";
     event.preventDefault();
     var selectCategoria = document.getElementById("categoria");
     var selectGenero = document.getElementById("genero");
@@ -42,31 +33,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (!checked) {
-      alert.innerText = "Selecione pelo menos uma opção de Plataforma.";
-      alert.style.display = "block";
+      notify("Selecione pelo menos uma opção de Plataforma.", true)
       return;
     } else if (
       selectedValueCategoria === "" ||
       selectedValueCategoria === null
     ) {
-      alert.innerText = "Selecione uma opção de Categoria.";
-      alert.style.display = "block";
+      notify("Selecione uma Categoria.", true)
       return;
     } else if (selectedValueGenero === "" || selectedValueGenero === null) {
-      alert.innerText = "Selecione uma opção de Genero.";
-      alert.style.display = "block";
+      notify("Selecione um Gênero.", true)
       return;
     } else {
       let response = saveData();
-      successAlert.style.display = 'block';
-      successAlert.innerText = response.message;
     }
   } 
 
 function validateEditFields(event) {
   var editCheckboxes = document.querySelectorAll('input[type="checkbox"]');
-  successAlert.style.display = 'none';
-  alert.style.display = "none";
   event.preventDefault();
   var selectCategoria = document.getElementById("categoriaEdit");
   var selectGenero = document.getElementById("generoEdit");
@@ -82,39 +66,22 @@ function validateEditFields(event) {
   }
 
   if (!checked) {
-    alertEdit.innerText = "Selecione pelo menos uma opção de Plataforma.";
-    alertEdit.style.display = "block";
+    notify("Selecione pelo menos uma opção de Plataforma.", true)
     return;
   } else if (
     selectedValueCategoria === "" ||
     selectedValueCategoria === null
   ) {
-    alertEdit.innerText = "Selecione uma opção de Categoria.";
-    alertEdit.style.display = "block";
+    notify("Selecione uma Categoria.", true)
     return;
   } else if (selectedValueGenero === "" || selectedValueGenero === null) {
-    alertEdit.innerText = "Selecione uma opção de Genero.";
-    alertEdit.style.display = "block";
+    notify("Selecione um Gênero.", true)
     return;
   } else {
     let response = updateData();
-    successAlertEdit.style.display = 'block';
-    successAlertEdit.innerText = response.message;
   }
 }   
 });
-
-function hideAlerts() {
-  const alert = document.getElementById("alertError");
-  const successAlert = document.getElementById("alertSuccess");
-  const alertEdit = document.getElementById("alertErrorEdit");
-  const successAlertEdit = document.getElementById("alertSuccessEdit");
-  alert.style.display ='none';
-  successAlert.style.display = 'none';
-  alertEdit.style.display ='none';
-  successAlertEdit.style.display ='none';      
-}
-
 
 //TABLE
 function buildTable(data) {
@@ -162,7 +129,6 @@ function createEditButton(game) {
   btnEdit.textContent = "✏️";
 
   btnEdit.addEventListener("click", function () {
-    hideAlerts();
     setEditForm(game)
   });
 
@@ -214,6 +180,26 @@ function setEditForm(game){
 
 }
 
+function notify(msg, isError) {
+  let notification = document.querySelector(".card")
+  let notificationBody = document.querySelector(".card-body");
+  notification.classList.remove("vanish")
+  notificationBody.classList.remove("error", "success")
+  if(isError){
+    notificationBody.classList.add("error")
+  } else {
+    notificationBody.classList.add("success")
+  }
+
+
+  notification.style.display = "absolute";
+  notificationBody.innerText =  msg;
+  setTimeout(() => {
+    notification.classList.add("vanish")
+  }
+  , 4000);  
+}
+
 // CRUD API
 function getData() {
   let response = { data: localStorage.getItem("data") };
@@ -257,13 +243,16 @@ function saveData() {
     localStorage.setItem("data", JSON.stringify(request.data));
   } catch (e) {
     response.status = 423;
+    response.error = true;
     response.message = "Não foi possível efetuar o cadastro!";
     response.errorStack = e;
   }
 
   response.status = 201;
+  response.error = false;
   response.message = "Cadastro criado com sucesso!";
   response.data = idGame;
+  notify(response.message, response.error)
   console.log(response);
   return response;
 }
@@ -316,6 +305,7 @@ function updateData() {
   response.error = false;
   response.message = "Jogo editado com sucesso!";
   buildTable(response.data);
+  notify(response.message, response.error)
   console.log(response);
   return response;
   
@@ -335,6 +325,7 @@ function deleteData(id) {
   try {
     localStorage.setItem("data", JSON.stringify(response.data));
     response.status = 204;
+    response.message = "Game removido com sucesso!"
     response.error = false;
   } catch (e) {
     response.error = true;
@@ -342,6 +333,7 @@ function deleteData(id) {
     response.message = "Não foi possível efetuar o cadastro!";
     response.errorStack = e;
   }
+  notify(response.message, response.error)
   console.log(response);
   buildTable(response.data);
 }

@@ -229,3 +229,29 @@ touch-action: manipulation;
     width: 333px;
     height: 137px; 
 }
+
+
+/* ------------------------ NOTIFICATION --------------------*/
+.notification{
+  display: block!important;
+  width: 30rem;
+  z-index: 1056;
+  overflow: hidden;
+  animation: fade-in 0.3s forwards, slide-down 0.3s forwards;
+}
+
+.notification .error{
+  color: crimson;
+ background-color: rgb(255, 212, 212);
+}
+.notification .success{
+  color: darkgreen;
+  background-color: rgb(220, 255, 215);
+ }
+ 
+.notification.vanish {
+  opacity: 0;
+  max-height: 0;
+  transition: opacity 0.3s, max-height 0.3s;
+}
+
