@@ -1,9 +1,11 @@
+/* ------------------ BODY ---------------------- */
+
 body {
     background-image: url('gameteca.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-color: #000;
-    color: #FAFAFA; /* Cor do texto */
+    color: #FAFAFA; 
 }
 
 .container.retro {
@@ -11,10 +13,12 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+/* ------------------ BOTÕES ---------------------- */
+
 /* BUTTON CADASTRAR*/
-.button-89 {
-    --b: 3px;   /* border thickness */
-    --s: .45em; /* size of the corner */
+.btnRegister {
+    --b: 3px;  
+    --s: .45em;
     --color: #373B44;
 
     padding: calc(.5em + var(--s)) calc(.9em + var(--s));
@@ -35,19 +39,19 @@ body {
     touch-action: manipulation;
     }
 
-    .button-89:hover,
-    .button-89:focus-visible{
+    .btnRegister:hover,
+    .btnRegister:focus-visible{
     --_p: 0px;
     outline-color: var(--color);
     outline-offset: .05em;
     }
 
-    .button-89:active {
+    .btnRegister:active {
     background: var(--color);
     color: #FAFAFA;
     }
 
-/* MODAL BUTTON CLOSE/SAVE */
+/* MODAL -> BUTTON FECHAR E SALVAR */
 
 .button-close,
 .button-close:after {
@@ -149,10 +153,7 @@ touch-action: manipulation;
   }
 }
 
-/* BUTTON EDIT/CANCEL */
-
-
-/* CSS */
+/* TABELA ->  BUTTON EDITAR E DELETAR*/
 
 .btnEdit, .btnDelete {
     align-self: center;
@@ -161,29 +162,29 @@ touch-action: manipulation;
     background-position: 0 90%;
     background-repeat: repeat no-repeat;
     background-size: 4px 3px;
-    border-radius: 5px; /* Reduzindo o raio do arredondamento */
+    border-radius: 5px; 
     border-style: solid;
-    border-width: 1px; /* Reduzindo a largura da borda */
-    box-shadow: rgba(0, 0, 0, .2) 5px 5px 5px -5px; /* Reduzindo a sombra */
+    border-width: 1px; 
+    box-shadow: rgba(0, 0, 0, .2) 5px 5px 5px -5px; 
     box-sizing: border-box;
     color: #41403e;
     cursor: pointer;
     display: inline-block;
     font-family: Neucha, sans-serif;
-    font-size: 0.8rem; /* Reduzindo o tamanho da fonte */
-    line-height: 1; /* Reduzindo o espaçamento entre linhas */
+    font-size: 0.8rem; 
+    line-height: 1; 
     outline: none;
-    padding: 5px 10px; /* Reduzindo o padding */
+    padding: 5px 10px; 
     text-decoration: none;
     transition: all 235ms ease-in-out;
-    border-bottom-left-radius: 5px; /* Reduzindo o raio do arredondamento */
-    border-bottom-right-radius: 5px; /* Reduzindo o raio do arredondamento */
-    border-top-left-radius: 5px; /* Reduzindo o raio do arredondamento */
-    border-top-right-radius: 5px; /* Reduzindo o raio do arredondamento */
+    border-bottom-left-radius: 5px; 
+    border-bottom-right-radius: 5px; 
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px; 
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
-    margin-right: 10px; /* Adicionando margem à direita dos botões */
+    margin-right: 10px; 
   }
   
   
@@ -196,9 +197,7 @@ touch-action: manipulation;
     box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
   }
   
-  
-
-/* TABLE */
+/* ------------------ TABELA ---------------------- */
 
 .table.retro-table {
     width: 90%;
