@@ -16,38 +16,38 @@ body {
     --b: 3px;   /* border thickness */
     --s: .45em; /* size of the corner */
     --color: #373B44;
-    
+
     padding: calc(.5em + var(--s)) calc(.9em + var(--s));
     color: var(--color);
     --_p: var(--s);
     background:
-      conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
-      var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+        conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+        var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
     transition: .3s linear, color 0s, background-color 0s;
     outline: var(--b) solid #0000;
     outline-offset: .6em;
     font-size: 16px;
-  
+
     border: 0;
-  
+
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
-  }
-  
-  .button-89:hover,
-  .button-89:focus-visible{
+    }
+
+    .button-89:hover,
+    .button-89:focus-visible{
     --_p: 0px;
     outline-color: var(--color);
     outline-offset: .05em;
-  }
-  
-  .button-89:active {
+    }
+
+    .button-89:active {
     background: var(--color);
     color: #FAFAFA;
-  }
+    }
 
-  /* MODAL BUTTON close */
+/* MODAL BUTTON CLOSE/SAVE */
 
 .button-close,
 .button-close:after {
@@ -148,8 +148,57 @@ touch-action: manipulation;
     line-height: 44px;
   }
 }
+
+/* BUTTON EDIT/CANCEL */
+
+
+/* CSS */
+
+.btnEdit, .btnDelete {
+    align-self: center;
+    background-color: #fafafa;
+    background-image: none;
+    background-position: 0 90%;
+    background-repeat: repeat no-repeat;
+    background-size: 4px 3px;
+    border-radius: 5px; /* Reduzindo o raio do arredondamento */
+    border-style: solid;
+    border-width: 1px; /* Reduzindo a largura da borda */
+    box-shadow: rgba(0, 0, 0, .2) 5px 5px 5px -5px; /* Reduzindo a sombra */
+    box-sizing: border-box;
+    color: #41403e;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Neucha, sans-serif;
+    font-size: 0.8rem; /* Reduzindo o tamanho da fonte */
+    line-height: 1; /* Reduzindo o espaçamento entre linhas */
+    outline: none;
+    padding: 5px 10px; /* Reduzindo o padding */
+    text-decoration: none;
+    transition: all 235ms ease-in-out;
+    border-bottom-left-radius: 5px; /* Reduzindo o raio do arredondamento */
+    border-bottom-right-radius: 5px; /* Reduzindo o raio do arredondamento */
+    border-top-left-radius: 5px; /* Reduzindo o raio do arredondamento */
+    border-top-right-radius: 5px; /* Reduzindo o raio do arredondamento */
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin-right: 10px; /* Adicionando margem à direita dos botões */
+  }
+  
+  
+  .btnEdit:hover, .btnDelete:hover {
+    box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+    transform: translate3d(0, 2px, 0);
+  }
+  
+  .btnEdit:focus, .btnDelete:focus {
+    box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+  }
+  
   
 
+/* TABLE */
 
 .table.retro-table {
     width: 90%;
