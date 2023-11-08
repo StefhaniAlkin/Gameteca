@@ -230,6 +230,11 @@ touch-action: manipulation;
     height: 137px; 
 }
 
+#editarjogo {
+  width: 333;
+  height: 137px;
+}
+
 
 /* ------------------------ NOTIFICATION --------------------*/
 .notification{
