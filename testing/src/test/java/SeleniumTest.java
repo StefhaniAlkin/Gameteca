@@ -40,7 +40,7 @@ public class SeleniumTest {
         WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        addGame(driver, "Game Name", "2022", "PC", "Multiplayer", "RPG");
+        addGame(driver, "Game Name", "2022", "PC");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
@@ -56,7 +56,7 @@ public class SeleniumTest {
         WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        addGame(driver, "Game Name", "2022", "PC", "Multiplayer", "RPG");
+        addGame(driver, "Game Name", "2022", "PC");
 
         WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='Game Name']]"));
         assertNotNull(gameRow);
@@ -87,7 +87,31 @@ public class SeleniumTest {
         driver.quit();
     }
 
-    private void addGame(WebDriver driver, String name, String year, String platform, String category, String genre) {
+    @Test
+    @DisplayName("Should delete a game.")
+    public void shouldDeleteGame() {
+        WebDriver driver = getDriver();
+        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
+
+        addGame(driver, "Game to Delete", "2022", "PC");
+
+        WebElement deleteButton = driver.findElement(By.xpath("//tr[td[text()='Game to Delete']]//button[@class='btnDelete']"));
+
+        assertNotNull(deleteButton, "Delete button for the game should be present.");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("modal-backdrop")));
+
+        deleteButton.click();
+
+        boolean isGameDeleted = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//tr[td[text()='Game to Delete']]")));
+
+        assertTrue(isGameDeleted, "The game should be deleted and not displayed in the game list.");
+
+        driver.quit();
+    }
+
+    private void addGame(WebDriver driver, String name, String year, String platform) {
         WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
         registerButton.click();
 
@@ -118,7 +142,6 @@ public class SeleniumTest {
         WebElement closeRegistrationModalButton = driver.findElement(By.xpath("//button[contains(text(), 'Fechar')]"));
         closeRegistrationModalButton.click();
     }
-
 
     private int getPlatformIndex(String platform) {
         return switch (platform.toLowerCase()) {
