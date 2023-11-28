@@ -1,18 +1,19 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SeleniumTest {
 
@@ -103,10 +104,10 @@ public class SeleniumTest {
         platformCheckbox.click();
 
         Select categorySelect = new Select(driver.findElement(By.id("categoria")));
-        categorySelect.selectByVisibleText(category);
+        categorySelect.selectByVisibleText("Single Player");
 
         Select genreSelect = new Select(driver.findElement(By.id("genero")));
-        genreSelect.selectByVisibleText(genre);
+        genreSelect.selectByVisibleText("RPG");
 
         WebElement saveButton = driver.findElement(By.xpath("//button[contains(text(), 'Salvar')]"));
         saveButton.click();
@@ -117,6 +118,7 @@ public class SeleniumTest {
         WebElement closeRegistrationModalButton = driver.findElement(By.xpath("//button[contains(text(), 'Fechar')]"));
         closeRegistrationModalButton.click();
     }
+
 
     private int getPlatformIndex(String platform) {
         return switch (platform.toLowerCase()) {
