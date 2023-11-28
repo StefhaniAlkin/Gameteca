@@ -90,4 +90,35 @@ public class SeleniumTest {
 
         driver.quit();
     }
+
+    @Test
+    @DisplayName("Should show browser validation error for missing game name")
+    public void shouldShowBrowserValidationErrorMessageForMissingGameName() {
+        String driversDirectory = "src/test/resources/drivers/";
+
+        String geckoDriverPath = new File(driversDirectory, "geckodriver").getAbsolutePath();
+        System.setProperty("webdriver.gecko.driver", geckoDriverPath);
+
+        WebDriverManager.firefoxdriver().setup();
+
+        WebDriver driver = new FirefoxDriver();
+        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
+
+        WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
+        registerButton.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        WebElement registrationModal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cadastrarModal")));
+        assertTrue(registrationModal.isDisplayed());
+
+        WebElement saveButton = driver.findElement(By.xpath("//button[contains(text(), 'Salvar')]"));
+        saveButton.click();
+
+        WebElement gameNameInput = driver.findElement(By.id("nome"));
+        assertTrue(gameNameInput.isDisplayed());
+
+        driver.quit();
+    }
+
 }
