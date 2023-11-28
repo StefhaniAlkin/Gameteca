@@ -2,6 +2,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -11,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -88,25 +90,32 @@ public class SeleniumTest {
     }
 
     @Test
-    @DisplayName("Should delete a game.")
-    public void shouldDeleteGame() {
+    @DisplayName("Should not save changes if all platforms are removed during editing.")
+    public void shouldNotSaveChangesIfAllPlatformsRemovedDuringEditing() {
         WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        addGame(driver, "Game to Delete", "2022", "PC");
+        addGame(driver, "Game to Edit", "2022", "PC");
 
-        WebElement deleteButton = driver.findElement(By.xpath("//tr[td[text()='Game to Delete']]//button[@class='btnDelete']"));
+        WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='Game to Edit']]"));
+        assertNotNull(gameRow);
 
-        assertNotNull(deleteButton, "Delete button for the game should be present.");
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", gameRow.findElement(By.xpath(".//button[@class='btnEdit']")));
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.className("modal-backdrop")));
 
-        deleteButton.click();
+        WebElement platformCheckboxesContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("editarForm")));
 
-        boolean isGameDeleted = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//tr[td[text()='Game to Delete']]")));
+        List<WebElement> platformCheckboxes = platformCheckboxesContainer.findElements(By.cssSelector("input[type='checkbox']"));
 
-        assertTrue(isGameDeleted, "The game should be deleted and not displayed in the game list.");
+        for (WebElement checkbox : platformCheckboxes) {
+            if (checkbox.isSelected()) {
+                checkbox.click();
+            }
+        }
+
+        WebElement saveButton = driver.findElement(By.id("salvarEdicao"));
+        saveButton.click();
 
         driver.quit();
     }
