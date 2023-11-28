@@ -1,6 +1,7 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,9 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 
 import java.io.File;
 import java.time.Duration;
@@ -20,15 +19,7 @@ public class SeleniumTest {
     @Test
     @DisplayName("Should open registration modal.")
     public void shouldOpenRegistrationModal() {
-        String driversDirectory = "src/test/resources/drivers/";
-
-        String geckoDriverPath = new File(driversDirectory, "geckodriver").getAbsolutePath();
-        System.setProperty("webdriver.gecko.driver", geckoDriverPath);
-
-        WebDriverManager.firefoxdriver().setup();
-
-        WebDriver driver = new FirefoxDriver();
-
+        WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
         WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
@@ -45,45 +36,26 @@ public class SeleniumTest {
     @Test
     @DisplayName("Should add a new game.")
     public void shouldAddNewGameWithPlatformCategoryGenre() {
-        String driversDirectory = "src/test/resources/drivers/";
-
-        String geckoDriverPath = new File(driversDirectory, "geckodriver").getAbsolutePath();
-        System.setProperty("webdriver.gecko.driver", geckoDriverPath);
-
-        WebDriverManager.firefoxdriver().setup();
-
-        WebDriver driver = new FirefoxDriver();
-
+        WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
-        registerButton.click();
+        addGame(driver, "Game Name", "2022", "PC", "Multiplayer", "RPG");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement registrationModal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cadastrarModal")));
-        assertTrue(registrationModal.isDisplayed());
 
-        WebElement nomeInput = driver.findElement(By.id("nome"));
-        WebElement anoInput = driver.findElement(By.id("ano-lancamento"));
-        nomeInput.sendKeys("Game Name");
-        anoInput.sendKeys("2022");
+        WebElement gameRow = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[td[text()='Game Name']]")));
+        assertNotNull(gameRow);
 
-        WebElement platformPC = driver.findElement(By.id("checkbox1"));
-        WebElement platformXbox = driver.findElement(By.id("checkbox2"));
-        platformPC.click();
-        platformXbox.click();
+        driver.quit();
+    }
 
-        Select categorySelect = new Select(driver.findElement(By.id("categoria")));
-        categorySelect.selectByVisibleText("Multiplayer");
+    @Test
+    @DisplayName("Should display the added game in the game list.")
+    public void shouldDisplayAddedGameInList() {
+        WebDriver driver = getDriver();
+        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        Select genreSelect = new Select(driver.findElement(By.id("genero")));
-        genreSelect.selectByVisibleText("RPG");
-
-        WebElement saveButton = driver.findElement(By.xpath("//button[contains(text(), 'Salvar')]"));
-        saveButton.click();
-
-        WebElement successNotification = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("success")));
-        assertTrue(successNotification.isDisplayed());
+        addGame(driver, "Game Name", "2022", "PC", "Multiplayer", "RPG");
 
         WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='Game Name']]"));
         assertNotNull(gameRow);
@@ -92,16 +64,9 @@ public class SeleniumTest {
     }
 
     @Test
-    @DisplayName("Should show browser validation error for missing game name")
+    @DisplayName("Should show browser validation error for missing game name.")
     public void shouldShowBrowserValidationErrorMessageForMissingGameName() {
-        String driversDirectory = "src/test/resources/drivers/";
-
-        String geckoDriverPath = new File(driversDirectory, "geckodriver").getAbsolutePath();
-        System.setProperty("webdriver.gecko.driver", geckoDriverPath);
-
-        WebDriverManager.firefoxdriver().setup();
-
-        WebDriver driver = new FirefoxDriver();
+        WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
         WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
@@ -121,19 +86,7 @@ public class SeleniumTest {
         driver.quit();
     }
 
-    @Test
-    @DisplayName("Should display the added game in the game list.")
-    public void shouldDisplayAddedGameInList() {
-        String driversDirectory = "src/test/resources/drivers/";
-
-        String geckoDriverPath = new File(driversDirectory, "geckodriver").getAbsolutePath();
-        System.setProperty("webdriver.gecko.driver", geckoDriverPath);
-
-        WebDriverManager.firefoxdriver().setup();
-
-        WebDriver driver = new FirefoxDriver();
-        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
-
+    private void addGame(WebDriver driver, String name, String year, String platform, String category, String genre) {
         WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
         registerButton.click();
 
@@ -143,21 +96,17 @@ public class SeleniumTest {
 
         WebElement nomeInput = driver.findElement(By.id("nome"));
         WebElement anoInput = driver.findElement(By.id("ano-lancamento"));
+        nomeInput.sendKeys(name);
+        anoInput.sendKeys(year);
 
-        nomeInput.sendKeys("Game Name");
-        anoInput.sendKeys("2022");
-
-        WebElement platformPC = driver.findElement(By.id("checkbox1"));
-        WebElement platformXbox = driver.findElement(By.id("checkbox2"));
-
-        platformPC.click();
-        platformXbox.click();
+        WebElement platformCheckbox = driver.findElement(By.id("checkbox" + getPlatformIndex(platform)));
+        platformCheckbox.click();
 
         Select categorySelect = new Select(driver.findElement(By.id("categoria")));
-        categorySelect.selectByVisibleText("Multiplayer");
+        categorySelect.selectByVisibleText(category);
 
         Select genreSelect = new Select(driver.findElement(By.id("genero")));
-        genreSelect.selectByVisibleText("RPG");
+        genreSelect.selectByVisibleText(genre);
 
         WebElement saveButton = driver.findElement(By.xpath("//button[contains(text(), 'Salvar')]"));
         saveButton.click();
@@ -167,11 +116,25 @@ public class SeleniumTest {
 
         WebElement closeRegistrationModalButton = driver.findElement(By.xpath("//button[contains(text(), 'Fechar')]"));
         closeRegistrationModalButton.click();
+    }
 
-        WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='Game Name']]"));
-        assertNotNull(gameRow);
+    private int getPlatformIndex(String platform) {
+        return switch (platform.toLowerCase()) {
+            case "pc" -> 1;
+            case "xbox" -> 2;
+            default -> throw new IllegalArgumentException("Unsupported platform: " + platform);
+        };
+    }
 
-        driver.quit();
+    private WebDriver getDriver() {
+        String driversDirectory = "src/test/resources/drivers/";
+
+        String geckoDriverPath = new File(driversDirectory, "geckodriver").getAbsolutePath();
+        System.setProperty("webdriver.gecko.driver", geckoDriverPath);
+
+        WebDriverManager.firefoxdriver().setup();
+
+        return new FirefoxDriver();
     }
 
 }
