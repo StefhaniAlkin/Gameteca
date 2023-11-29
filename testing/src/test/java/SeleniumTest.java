@@ -1,4 +1,7 @@
+import com.github.javafaker.Faker;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -10,8 +13,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.github.javafaker.Faker;
-
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
@@ -22,13 +23,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SeleniumTest {
 
     private final Faker faker = new Faker();
+    WebDriver driver;
+
+    @BeforeEach
+    void setUp() {
+        driver = getDriver();
+        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
+    }
+
+    @AfterEach
+    void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 
     @Test
     @DisplayName("Should open registration modal.")
     public void shouldOpenRegistrationModal() {
-        WebDriver driver = getDriver();
-        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
-
         WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
         registerButton.click();
 
@@ -36,16 +48,11 @@ public class SeleniumTest {
         WebElement registrationModal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cadastrarModal")));
 
         assert registrationModal.isDisplayed();
-
-        driver.quit();
     }
 
     @Test
     @DisplayName("Should add a new game.")
     public void shouldAddNewGameWithPlatformCategoryGenre() {
-        WebDriver driver = getDriver();
-        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
-
         String gameName = faker.gameOfThrones().character();
         String year = String.valueOf(faker.number().numberBetween(2000, 2023));
         String platform = faker.options().option("PC", "Xbox", "PlayStation");
@@ -56,34 +63,24 @@ public class SeleniumTest {
 
         WebElement gameRow = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[td[text()='" + gameName + "']]")));
         assertNotNull(gameRow);
-
-        driver.quit();
     }
 
     @Test
     @DisplayName("Should display the added game in the game list.")
     public void shouldDisplayAddedGameInList() {
-        WebDriver driver = getDriver();
-        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
-
         String gameName = faker.gameOfThrones().character();
         String year = String.valueOf(faker.number().numberBetween(2000, 2023));
-        String platform = faker.options().option("PC", "Xbox", "PlayStation");
+        String platform = faker.options().option("PC", "Xbox", "Playstation");
 
         addGame(driver, gameName, year, platform);
 
         WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='" + gameName + "']]"));
         assertNotNull(gameRow);
-
-        driver.quit();
     }
 
     @Test
     @DisplayName("Should show browser validation error for missing game name.")
     public void shouldShowBrowserValidationErrorMessageForMissingGameName() {
-        WebDriver driver = getDriver();
-        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
-
         WebElement registerButton = driver.findElement(By.id("btnModalCadastro"));
         registerButton.click();
 
@@ -100,16 +97,11 @@ public class SeleniumTest {
 
         String dynamicGameName = faker.gameOfThrones().character();
         gameNameInput.sendKeys(dynamicGameName);
-
-        driver.quit();
     }
 
     @Test
     @DisplayName("Should not save changes if all platforms are removed during editing.")
     public void shouldNotSaveChangesIfAllPlatformsRemovedDuringEditing() {
-        WebDriver driver = getDriver();
-        driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
-
         String gameName = new Faker().gameOfThrones().character();
         addGame(driver, gameName, "2022", "PC");
 
@@ -132,8 +124,6 @@ public class SeleniumTest {
 
         WebElement saveButton = driver.findElement(By.id("salvarEdicao"));
         saveButton.click();
-
-        driver.quit();
     }
 
     private void addGame(WebDriver driver, String name, String year, String platform) {
@@ -172,6 +162,8 @@ public class SeleniumTest {
         return switch (platform.toLowerCase()) {
             case "pc" -> 1;
             case "xbox" -> 2;
+            case "playstation" -> 3;
+            case "nintendo" -> 4;
             default -> throw new IllegalArgumentException("Unsupported platform: " + platform);
         };
     }
