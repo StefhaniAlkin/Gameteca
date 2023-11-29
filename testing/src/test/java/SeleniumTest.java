@@ -9,6 +9,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -16,7 +17,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
+import org.openqa.selenium.NoSuchElementException;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,11 +27,13 @@ public class SeleniumTest {
 
     private final Faker faker = new Faker();
     WebDriver driver;
+    WebDriverWait wait;
 
     @BeforeEach
     void setUp() {
         driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     @AfterEach
@@ -55,7 +60,7 @@ public class SeleniumTest {
     public void shouldAddNewGameWithPlatformCategoryGenre() {
         String gameName = faker.gameOfThrones().character();
         String year = String.valueOf(faker.number().numberBetween(2000, 2023));
-        String platform = faker.options().option("PC", "Xbox", "PlayStation");
+        String platform = faker.options().option("PC", "Xbox", "Playstation");
 
         addGame(driver, gameName, year, platform);
 
@@ -63,6 +68,28 @@ public class SeleniumTest {
 
         WebElement gameRow = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[td[text()='" + gameName + "']]")));
         assertNotNull(gameRow);
+    }
+
+    @Test
+    @DisplayName("Should delete a game and show success notification.")
+    public void shouldDeleteGameAndShowSuccessNotification() {
+        String gameName = faker.gameOfThrones().character();
+        String year = String.valueOf(faker.number().numberBetween(2000, 2023));
+        String platform = faker.options().option("PC", "Xbox", "Playstation");
+
+        addGame(driver, gameName, year, platform);
+
+        WebElement deleteButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("btnDelete")));
+        assertNotNull(deleteButton);
+
+        Actions actions = new Actions(driver);
+        actions.moveByOffset(0, 200).perform();
+        deleteButton.click();
+
+        WebElement successNotification = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'card-body') and contains(@class, 'success')]")));
+        assertTrue(successNotification.isDisplayed());
+
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.xpath("//tr[td[text()='GameToDelete']]")));
     }
 
     @Test
