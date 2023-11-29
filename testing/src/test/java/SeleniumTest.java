@@ -10,6 +10,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.github.javafaker.Faker;
+
 import java.io.File;
 import java.time.Duration;
 import java.util.List;
@@ -18,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SeleniumTest {
+
+    private final Faker faker = new Faker();
 
     @Test
     @DisplayName("Should open registration modal.")
@@ -42,11 +46,15 @@ public class SeleniumTest {
         WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        addGame(driver, "Game Name", "2022", "PC");
+        String gameName = faker.gameOfThrones().character();
+        String year = String.valueOf(faker.number().numberBetween(2000, 2023));
+        String platform = faker.options().option("PC", "Xbox", "PlayStation");
+
+        addGame(driver, gameName, year, platform);
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        WebElement gameRow = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[td[text()='Game Name']]")));
+        WebElement gameRow = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[td[text()='" + gameName + "']]")));
         assertNotNull(gameRow);
 
         driver.quit();
@@ -58,9 +66,13 @@ public class SeleniumTest {
         WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        addGame(driver, "Game Name", "2022", "PC");
+        String gameName = faker.gameOfThrones().character();
+        String year = String.valueOf(faker.number().numberBetween(2000, 2023));
+        String platform = faker.options().option("PC", "Xbox", "PlayStation");
 
-        WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='Game Name']]"));
+        addGame(driver, gameName, year, platform);
+
+        WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='" + gameName + "']]"));
         assertNotNull(gameRow);
 
         driver.quit();
@@ -86,6 +98,9 @@ public class SeleniumTest {
         WebElement gameNameInput = driver.findElement(By.id("nome"));
         assertTrue(gameNameInput.isDisplayed());
 
+        String dynamicGameName = faker.gameOfThrones().character();
+        gameNameInput.sendKeys(dynamicGameName);
+
         driver.quit();
     }
 
@@ -95,9 +110,10 @@ public class SeleniumTest {
         WebDriver driver = getDriver();
         driver.get("https://fleurspirituelles.github.io/gameteca-quality-assurance/");
 
-        addGame(driver, "Game to Edit", "2022", "PC");
+        String gameName = new Faker().gameOfThrones().character();
+        addGame(driver, gameName, "2022", "PC");
 
-        WebElement gameRow = driver.findElement(By.xpath("//tr[td[text()='Game to Edit']]"));
+        WebElement gameRow = driver.findElement(By.xpath("//tr[td[1][contains(text(), '" + gameName + "')]]"));
         assertNotNull(gameRow);
 
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", gameRow.findElement(By.xpath(".//button[@class='btnEdit']")));
